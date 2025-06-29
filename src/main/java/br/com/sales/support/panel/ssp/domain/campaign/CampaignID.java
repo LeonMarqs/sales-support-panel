@@ -1,0 +1,27 @@
+package br.com.sales.support.panel.ssp.domain.campaign;
+
+import br.com.sales.support.panel.ssp.domain.exceptions.ValidationException;
+
+import java.util.UUID;
+
+public record CampaignID(String id) {
+
+	public CampaignID {
+		if (id == null) {
+			throw new ValidationException("Campaign ID cannot be empty");
+		}
+	}
+
+	public static CampaignID unique() {
+		return new CampaignID(UUID.randomUUID().toString());
+	}
+
+	public static CampaignID with(final String value) {
+		try {
+			return new CampaignID(UUID.fromString(value).toString());
+		} catch (IllegalArgumentException exception) {
+			throw new ValidationException("Invalid ID for campaign");
+		}
+	}
+
+}
