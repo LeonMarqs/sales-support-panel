@@ -4,6 +4,7 @@ import br.com.sales.support.panel.ssp.application.campaign.GetCampaignsUseCase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public record CampaignFilter(String name, LocalDate startDate, LocalDate endDate, BigDecimal budget) {
 
