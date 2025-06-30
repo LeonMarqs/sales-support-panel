@@ -23,7 +23,7 @@ public class GetCampaignsUseCase extends UseCase<GetCampaignsUseCase.Input, List
 		final List<Campaign> campaignsByFilter = campaignRepository.getCampaignsByFilter(CampaignFilter.with(input));
 
 		return campaignsByFilter.stream().map(campaign -> new Output(
-				campaign.getCampaignID().id(),
+				campaign.getCampaignID().value(),
 				campaign.getName().value(),
 				campaign.getBudget().value(),
 				campaign.getStartDate()

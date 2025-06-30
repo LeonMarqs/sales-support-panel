@@ -20,7 +20,7 @@ public class InMemoryCampaignRepository implements CampaignRepository {
 
 	@Override
 	public Optional<Campaign> getCampaignById(final CampaignID id) {
-		return Optional.ofNullable(campaignsById.get(id.id()));
+		return Optional.ofNullable(campaignsById.get(id.value()));
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class InMemoryCampaignRepository implements CampaignRepository {
 
 	@Override
 	public Campaign create(final Campaign campaign) {
-		campaignsById.put(campaign.getCampaignID().id(), campaign);
+		campaignsById.put(campaign.getCampaignID().value(), campaign);
 		return campaign;
 	}
 

@@ -4,10 +4,10 @@ import br.com.sales.support.panel.ssp.domain.exceptions.ValidationException;
 
 import java.util.UUID;
 
-public record CampaignID(String id) {
+public record CampaignID(String value) {
 
 	public CampaignID {
-		if (id == null) {
+		if (value == null) {
 			throw new ValidationException("Campaign ID cannot be empty");
 		}
 	}

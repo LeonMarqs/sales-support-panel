@@ -29,6 +29,9 @@ public class CampaignJPA {
 	@Column(name = "start_date")
 	private LocalDate startDate;
 
+	public CampaignJPA() {
+	}
+
 	public CampaignJPA(final UUID id, final String name, final BigDecimal budget, final LocalDate startDate) {
 		this.id = id;
 		this.name = name;
@@ -37,7 +40,7 @@ public class CampaignJPA {
 	}
 
 	public static CampaignJPA of(final Campaign campaign) {
-		return new CampaignJPA(UUID.fromString(campaign.getCampaignID().id()), campaign.getName().value(),
+		return new CampaignJPA(UUID.fromString(campaign.getCampaignID().value()), campaign.getName().value(),
 				campaign.getBudget().value(), campaign.getStartDate());
 	}
 

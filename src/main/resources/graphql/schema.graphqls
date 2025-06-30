@@ -3,6 +3,11 @@ type Query {
     campaign(id: ID!): Campaign
 }
 
+type Mutation {
+    createCampaign(name: String!, startDate: String, budget: Float): Campaign!
+    deleteCampaign(id: ID!): Boolean!
+}
+
 type Campaign {
     id: ID!
     name: String!

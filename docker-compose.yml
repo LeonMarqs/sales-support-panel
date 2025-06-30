@@ -31,9 +31,9 @@ services:
 #      - SPRING_DATASOURCE_USERNAME=admin
 #      - SPRING_DATASOURCE_PASSWORD=admin
 #      - AWS_DYNAMODB_ENDPOINT=http://dynamodb-local:8000
-#      - AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
-#      - AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
-#      - REGION: 'us-east-1'
+#      - AWS_ACCESS_KEY_ID=DUMMYIDEXAMPLE
+#      - AWS_SECRET_ACCESS_KEY=DUMMYEXAMPLEKEY
+#      - REGION=us-east-1
 #    depends_on:
 #      - postgres-db
 #      - dynamodb-local
