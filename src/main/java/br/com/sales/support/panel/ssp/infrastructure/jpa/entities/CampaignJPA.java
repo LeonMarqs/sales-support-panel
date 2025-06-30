@@ -2,10 +2,11 @@ package br.com.sales.support.panel.ssp.infrastructure.jpa.entities;
 
 import br.com.sales.support.panel.ssp.domain.campaign.Campaign;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignID;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
+import br.com.sales.support.panel.ssp.domain.campaign.CampaignStatusEnum;
+import br.com.sales.support.panel.ssp.domain.common.Money;
+import br.com.sales.support.panel.ssp.domain.common.Name;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,33 +20,49 @@ import java.util.UUID;
 @Setter
 public class CampaignJPA {
 
-	@Id
-	@Column(name = "id")
-	private UUID id;
-	@Column(name = "name")
-	private String name;
-	@Column(name = "budget")
-	private BigDecimal budget;
-	@Column(name = "start_date")
-	private LocalDate startDate;
+    @Id
+    @Column(name = "id")
+    private UUID id;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "budget")
+    private BigDecimal budget;
+    @Column(name = "start_date")
+    private LocalDate startDate;
+    @Column(name = "end_date")
+    private LocalDate endDate;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private CampaignStatusEnum status;
+    @Column(name = "platform")
+    @Enumerated(EnumType.STRING)
+    private CampaignPlatformEnum platform;
 
-	public CampaignJPA() {
-	}
+    public CampaignJPA() {
+    }
 
-	public CampaignJPA(final UUID id, final String name, final BigDecimal budget, final LocalDate startDate) {
-		this.id = id;
-		this.name = name;
-		this.budget = budget;
-		this.startDate = startDate;
-	}
+    public static CampaignJPA of(final Campaign campaign) {
+        final var jpaEntity = new CampaignJPA();
+        jpaEntity.setId(UUID.fromString(campaign.getCampaignID().value()));
+        jpaEntity.setName(campaign.getName().value());
+        jpaEntity.setBudget(campaign.getBudget().value());
+        jpaEntity.setStartDate(campaign.getStartDate());
+        jpaEntity.setEndDate(campaign.getEndDate());
+        jpaEntity.setStatus(campaign.getStatus());
+        jpaEntity.setPlatform(campaign.getPlatform());
+        return jpaEntity;
+    }
 
-	public static CampaignJPA of(final Campaign campaign) {
-		return new CampaignJPA(UUID.fromString(campaign.getCampaignID().value()), campaign.getName().value(),
-				campaign.getBudget().value(), campaign.getStartDate());
-	}
-
-	public Campaign toCampaign() {
-		return new Campaign(CampaignID.with(this.id.toString()), this.name, this.budget, this.startDate);
-	}
+    public Campaign toCampaign() {
+        return Campaign.builder()
+                .campaignID(CampaignID.with(this.id.toString()))
+                .name(new Name(this.name))
+                .budget(new Money(this.budget))
+                .startDate(this.startDate)
+                .endDate(this.endDate)
+                .status(this.status)
+                .platform(this.platform)
+                .build();
+    }
 
 }

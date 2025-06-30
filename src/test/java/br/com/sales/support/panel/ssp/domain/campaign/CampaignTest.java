@@ -14,7 +14,7 @@ class CampaignTest {
     void shouldCreateCampaignWithValidData() {
         final String name = "Test Campaign";
         final BigDecimal budget = BigDecimal.valueOf(1000.00);
-        final Campaign campaign = Campaign.newCampaign(name, budget, LocalDate.now());
+        final Campaign campaign = Campaign.newCampaign(name, budget, LocalDate.now(), true, CampaignPlatformEnum.FACEBOOK_ADS);
 
         assertNotNull(campaign);
         assertNotNull(campaign.getCampaignID());
@@ -24,13 +24,13 @@ class CampaignTest {
     @Test
     void shouldThrowExceptionForNullCampaignName() {
         final BigDecimal budget = BigDecimal.valueOf(1000.00);
-        assertThrows(ValidationException.class, () -> Campaign.newCampaign(null, budget, LocalDate.now()));
+        assertThrows(ValidationException.class, () -> Campaign.newCampaign(null, budget, LocalDate.now(), true, CampaignPlatformEnum.FACEBOOK_ADS));
     }
 
     @Test
     void shouldThrowExceptionForNegativeBudget() {
         final BigDecimal budget = BigDecimal.valueOf(-2000);
-        assertThrows(ValidationException.class, () -> Campaign.newCampaign("Test campaign", budget, LocalDate.now()));
+        assertThrows(ValidationException.class, () -> Campaign.newCampaign("Test campaign", budget, LocalDate.now(), true, CampaignPlatformEnum.FACEBOOK_ADS));
     }
 
 }

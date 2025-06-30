@@ -13,6 +13,15 @@ type Campaign {
     name: String!
     startDate: String
     budget: Float
+    status: CampaignStatus!
+}
+
+enum CampaignStatus {
+    DRAFT
+    ACTIVE
+    PAUSED
+    COMPLETED
+    ARCHIVED
 }
 
 input CampaignFilter {
@@ -20,4 +29,5 @@ input CampaignFilter {
     startDate: String
     endDate: String
     budget: Float
+    status: CampaignStatus
 }
