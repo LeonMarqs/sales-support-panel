@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SalesSupportPanelApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SalesSupportPanelApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SalesSupportPanelApplication.class, args);
+    }
 
 }

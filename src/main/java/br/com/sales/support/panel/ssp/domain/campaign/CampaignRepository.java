@@ -5,10 +5,10 @@ import java.util.Optional;
 
 public interface CampaignRepository {
 
-	Optional<Campaign> getCampaignById(CampaignID id);
+    Optional<Campaign> getCampaignById(CampaignID id);
 
-	List<Campaign> getCampaignsByFilter(CampaignFilter filter);
+    List<Campaign> getCampaignsByFilter(CampaignFilter filter);
 
-	Campaign create(Campaign campaign);
+    Campaign create(Campaign campaign);
 
 }

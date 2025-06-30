@@ -11,20 +11,20 @@ import java.util.Objects;
 @Configuration
 public class UseCaseConfig {
 
-	private final CampaignRepository campaignRepository;
+    private final CampaignRepository campaignRepository;
 
-	public UseCaseConfig(final CampaignRepository campaignRepository) {
-		this.campaignRepository = Objects.requireNonNull(campaignRepository);
-	}
+    public UseCaseConfig(final CampaignRepository campaignRepository) {
+        this.campaignRepository = Objects.requireNonNull(campaignRepository);
+    }
 
-	@Bean
-	public GetCampaignsUseCase getCampaignsUseCase() {
-		return new GetCampaignsUseCase(campaignRepository);
-	}
+    @Bean
+    public GetCampaignsUseCase getCampaignsUseCase() {
+        return new GetCampaignsUseCase(campaignRepository);
+    }
 
-	@Bean
-	public CreateCampaignUseCase createCampaignUseCase() {
-		return new CreateCampaignUseCase(campaignRepository);
-	}
+    @Bean
+    public CreateCampaignUseCase createCampaignUseCase() {
+        return new CreateCampaignUseCase(campaignRepository);
+    }
 
 }

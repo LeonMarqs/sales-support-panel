@@ -6,22 +6,22 @@ import java.util.UUID;
 
 public record CampaignID(String value) {
 
-	public CampaignID {
-		if (value == null) {
-			throw new ValidationException("Campaign ID cannot be empty");
-		}
-	}
+    public CampaignID {
+        if (value == null) {
+            throw new ValidationException("Campaign ID cannot be empty");
+        }
+    }
 
-	public static CampaignID unique() {
-		return new CampaignID(UUID.randomUUID().toString());
-	}
+    public static CampaignID unique() {
+        return new CampaignID(UUID.randomUUID().toString());
+    }
 
-	public static CampaignID with(final String value) {
-		try {
-			return new CampaignID(UUID.fromString(value).toString());
-		} catch (IllegalArgumentException exception) {
-			throw new ValidationException("Invalid ID for campaign");
-		}
-	}
+    public static CampaignID with(final String value) {
+        try {
+            return new CampaignID(UUID.fromString(value).toString());
+        } catch (IllegalArgumentException exception) {
+            throw new ValidationException("Invalid ID for campaign");
+        }
+    }
 
 }

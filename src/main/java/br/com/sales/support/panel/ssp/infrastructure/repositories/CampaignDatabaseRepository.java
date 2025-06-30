@@ -19,28 +19,28 @@ import java.util.UUID;
 @Repository
 public class CampaignDatabaseRepository implements CampaignRepository {
 
-	private final CampaignJPARepository campaignJPARepository;
+    private final CampaignJPARepository campaignJPARepository;
 
-	public CampaignDatabaseRepository(final CampaignJPARepository campaignJPARepository) {
-		this.campaignJPARepository = Objects.requireNonNull(campaignJPARepository);
-	}
+    public CampaignDatabaseRepository(final CampaignJPARepository campaignJPARepository) {
+        this.campaignJPARepository = Objects.requireNonNull(campaignJPARepository);
+    }
 
-	@Override
-	public Optional<Campaign> getCampaignById(final CampaignID id) {
-		Objects.requireNonNull(id, "Campaign ID must not be null");
-		return campaignJPARepository.findById(UUID.fromString(id.value())).map(CampaignJPA::toCampaign);
-	}
+    @Override
+    public Optional<Campaign> getCampaignById(final CampaignID id) {
+        Objects.requireNonNull(id, "Campaign ID must not be null");
+        return campaignJPARepository.findById(UUID.fromString(id.value())).map(CampaignJPA::toCampaign);
+    }
 
-	@Override
-	public List<Campaign> getCampaignsByFilter(final CampaignFilter filter) {
-		Specification<CampaignJPA> specification = CampaignJPASpecification.byFilter(filter);
-		return campaignJPARepository.findAll(specification).stream().map(CampaignJPA::toCampaign).toList();
-	}
+    @Override
+    public List<Campaign> getCampaignsByFilter(final CampaignFilter filter) {
+        Specification<CampaignJPA> specification = CampaignJPASpecification.byFilter(filter);
+        return campaignJPARepository.findAll(specification).stream().map(CampaignJPA::toCampaign).toList();
+    }
 
-	@Override
-	@Transactional
-	public Campaign create(final Campaign campaign) {
-		return campaignJPARepository.save(CampaignJPA.of(campaign)).toCampaign();
-	}
+    @Override
+    @Transactional
+    public Campaign create(final Campaign campaign) {
+        return campaignJPARepository.save(CampaignJPA.of(campaign)).toCampaign();
+    }
 
 }

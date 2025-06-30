@@ -12,55 +12,55 @@ import java.util.Optional;
 
 public class InMemoryCampaignRepository implements CampaignRepository {
 
-	private final Map<String, Campaign> campaignsById;
+    private final Map<String, Campaign> campaignsById;
 
-	public InMemoryCampaignRepository() {
-		this.campaignsById = new HashMap<>();
-	}
+    public InMemoryCampaignRepository() {
+        this.campaignsById = new HashMap<>();
+    }
 
-	@Override
-	public Optional<Campaign> getCampaignById(final CampaignID id) {
-		return Optional.ofNullable(campaignsById.get(id.value()));
-	}
+    @Override
+    public Optional<Campaign> getCampaignById(final CampaignID id) {
+        return Optional.ofNullable(campaignsById.get(id.value()));
+    }
 
-	@Override
-	public List<Campaign> getCampaignsByFilter(final CampaignFilter filter) {
+    @Override
+    public List<Campaign> getCampaignsByFilter(final CampaignFilter filter) {
 
-		List<Campaign> campaignsFiltered = campaignsById.values().stream().toList();
+        List<Campaign> campaignsFiltered = campaignsById.values().stream().toList();
 
-		if (filter.hasName()) {
-			campaignsFiltered = campaignsFiltered.stream()
-					.filter(campaign -> campaign.getName().value().contains(filter.name().toUpperCase())).toList();
-		}
+        if (filter.hasName()) {
+            campaignsFiltered = campaignsFiltered.stream()
+                    .filter(campaign -> campaign.getName().value().contains(filter.name().toUpperCase())).toList();
+        }
 
-		if (filter.hasStartDate()) {
-			campaignsFiltered = campaignsFiltered.stream()
-					.filter(campaign -> campaign.getStartDate().isEqual(filter.startDate()) || campaign.getStartDate()
-							.isAfter(filter.startDate())).toList();
-		}
+        if (filter.hasStartDate()) {
+            campaignsFiltered = campaignsFiltered.stream()
+                    .filter(campaign -> campaign.getStartDate().isEqual(filter.startDate()) || campaign.getStartDate()
+                            .isAfter(filter.startDate())).toList();
+        }
 
-		if (filter.hasEndDate()) {
-			campaignsFiltered = campaignsFiltered.stream()
-					.filter(campaign -> campaign.getStartDate().isBefore(filter.endDate()) || campaign.getStartDate()
-							.isEqual(filter.endDate())).toList();
-		}
+        if (filter.hasEndDate()) {
+            campaignsFiltered = campaignsFiltered.stream()
+                    .filter(campaign -> campaign.getStartDate().isBefore(filter.endDate()) || campaign.getStartDate()
+                            .isEqual(filter.endDate())).toList();
+        }
 
-		if (filter.hasBudget()) {
-			campaignsFiltered = campaignsFiltered.stream()
-					.filter(campaign -> campaign.getBudget().value().compareTo(filter.budget()) >= 0).toList();
-		}
+        if (filter.hasBudget()) {
+            campaignsFiltered = campaignsFiltered.stream()
+                    .filter(campaign -> campaign.getBudget().value().compareTo(filter.budget()) >= 0).toList();
+        }
 
-		if (campaignsFiltered.isEmpty()) {
-			return List.of();
-		}
+        if (campaignsFiltered.isEmpty()) {
+            return List.of();
+        }
 
-		return campaignsFiltered;
-	}
+        return campaignsFiltered;
+    }
 
-	@Override
-	public Campaign create(final Campaign campaign) {
-		campaignsById.put(campaign.getCampaignID().value(), campaign);
-		return campaign;
-	}
+    @Override
+    public Campaign create(final Campaign campaign) {
+        campaignsById.put(campaign.getCampaignID().value(), campaign);
+        return campaign;
+    }
 
 }
