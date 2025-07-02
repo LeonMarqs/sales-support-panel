@@ -11,10 +11,6 @@ jobs:
     services:
       postgres:
         image: postgres:latest
-        env:
-          POSTGRES_USER: ${{ secrets.DB_USER_CI }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD_CI }}
-          POSTGRES_DB: ${{ secrets.DB_NAME_CI }}
         ports:
           - 5432:5432
         options: >-
@@ -22,6 +18,11 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
+    env:
+      POSTGRES_USER: ${{ secrets.DB_USER_CI }}
+      POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD_CI }}
+      POSTGRES_DB: ${{ secrets.DB_NAME_CI }}
 
     steps:
       - name: Checkout code
@@ -46,13 +47,11 @@ jobs:
       - name: Build and run tests with Maven
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ secrets.DB_NAME_CI }}
-          SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USER_CI }}
-          SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD_CI }}
-        run: mvn -B verify
+        run: mvn -B install
         working-directory: .
 
       - name: Analyze with SonarCloud
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=LeonMarqs_sales-support-panel-backend -Dsonar.organization=leonmarqs
+        run: mvn -B sonar:sonar -Dsonar.projectKey=LeonMarqs_sales-support-panel-backend -Dsonar.organization=leonmarqs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
