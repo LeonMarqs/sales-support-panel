@@ -1,27 +1,28 @@
-name: Feature Branch CI & PR
+name: Pull Request Check
 
 on:
-  push:
-    branches: [ 'feature/**' ]
+  pull_request:
+    branches: [ 'main' ]
 
 jobs:
-  build-test-analyze-and-pr:
+  pr-quality-gate:
     runs-on: ubuntu-latest
-
     env:
       SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ secrets.DB_NAME_CI }}
       SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USER_CI }}
       SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD_CI }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     services:
       postgres:
         image: postgres:latest
-        ports:
-          - 5432:5432
         env:
           POSTGRES_USER: ${{ secrets.DB_USER_CI }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD_CI }}
           POSTGRES_DB: ${{ secrets.DB_NAME_CI }}
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd "pg_isready --username=$POSTGRES_USER --dbname=$POSTGRES_DB -h localhost"
           --health-interval 10s
@@ -38,7 +39,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '21'
-          distribution: 'temurin' # Distribuição popular e recomendada do OpenJDK.
+          distribution: 'temurin'
 
       - name: Cache Maven packages
         uses: actions/cache@v4
@@ -48,13 +49,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Build and run tests with Maven
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ secrets.DB_NAME_CI }}
+      - name: Build and test project
         run: mvn -B install
 
       - name: Analyze with SonarCloud
-        run: mvn -B sonar:sonar -Dsonar.projectKey=LeonMarqs_sales-support-panel-backend -Dsonar.organization=leonmarqs -Dsonar.host.url=https://sonarcloud.io
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn sonar:sonar -Dsonar.projectKey=LeonMarqs_sales-support-panel-backend -Dsonar.organization=leonmarqs -Dsonar.host.url=https://sonarcloud.io
