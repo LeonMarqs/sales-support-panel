@@ -16,7 +16,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD_CI }}
           POSTGRES_DB: ${{ secrets.DB_NAME_CI }}
         options: >-
-          --health-cmd "pg_isready --username=${{ secrets.DB_USER_CI }} --dbname=${{ secrets.DB_NAME_CI }} -h localhost"
+          --health-cmd "pg_isready --username=$POSTGRES_USER --dbname=$POSTGRES_DB -h localhost"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
