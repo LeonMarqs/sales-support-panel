@@ -1,0 +1,55 @@
+name: Feature Branch CI & PR
+
+on:
+  push:
+    branches: [ 'feature/**' ]
+
+jobs:
+  build-test-analyze-and-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin' # Distribuição popular e recomendada do OpenJDK.
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build and run tests with Maven
+        run: mvn -B verify
+        working-directory: .
+
+      - name: Analyze with SonarCloud
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=LeonMarqs_sales-support-panel-backend -Dsonar.organization=leonmarqs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: ./backend
+
+      - name: Create Pull Request
+        if: success()
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: '[CI] Merge feature/${{ github.ref_name }} to main'
+          body: |
+            Pull Request created automatically by CI's workflow.
+            - Build: OK
+            - Tests: OK
+            - SonarCloud Analysis: OK
+          head: ${{ github.ref_name }}
+          base: main
+          update: true
