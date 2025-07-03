@@ -5,7 +5,7 @@ on:
     branches: [ 'feature/**' ]
 
 jobs:
-  build-test-analyze-and-pr:
+  build-test-analyze:
     runs-on: ubuntu-latest
 
     env:

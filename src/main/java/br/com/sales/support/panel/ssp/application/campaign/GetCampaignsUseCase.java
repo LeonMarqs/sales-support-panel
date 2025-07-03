@@ -1,10 +1,7 @@
 package br.com.sales.support.panel.ssp.application.campaign;
 
 import br.com.sales.support.panel.ssp.application.UseCase;
-import br.com.sales.support.panel.ssp.domain.campaign.Campaign;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignFilter;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignRepository;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignStatusEnum;
+import br.com.sales.support.panel.ssp.domain.campaign.*;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -31,6 +28,7 @@ public class GetCampaignsUseCase extends UseCase<GetCampaignsUseCase.Input, List
                 .startDate(campaign.getStartDate())
                 .endDate(campaign.getEndDate())
                 .status(campaign.getStatus())
+                .platform(campaign.getPlatform())
                 .build()).toList();
     }
 
@@ -39,7 +37,7 @@ public class GetCampaignsUseCase extends UseCase<GetCampaignsUseCase.Input, List
     }
 
     @Builder
-    public record Output(String id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate,
+    public record Output(String id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate, CampaignPlatformEnum platform,
                          CampaignStatusEnum status) {
     }
 

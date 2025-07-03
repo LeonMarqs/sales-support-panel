@@ -4,7 +4,7 @@ type Query {
 }
 
 type Mutation {
-    createCampaign(name: String!, startDate: String, budget: Float): Campaign!
+    createCampaign(name: String!, startDate: String, budget: Float, platform: CampaignPlatform, active: Boolean): Campaign!
     deleteCampaign(id: ID!): Boolean!
 }
 
@@ -14,6 +14,7 @@ type Campaign {
     startDate: String
     budget: Float
     status: CampaignStatus!
+    platform: CampaignPlatform
 }
 
 enum CampaignStatus {
@@ -22,6 +23,18 @@ enum CampaignStatus {
     PAUSED
     COMPLETED
     ARCHIVED
+}
+
+enum CampaignPlatform {
+    GOOGLE_ADS
+    FACEBOOK_ADS
+    INSTAGRAM_ADS
+    LINKEDIN_ADS
+    TWITTER_ADS
+    TIKTOK_ADS
+    SNAPCHAT_ADS
+    YOUTUBE_ADS
+    OTHER
 }
 
 input CampaignFilter {

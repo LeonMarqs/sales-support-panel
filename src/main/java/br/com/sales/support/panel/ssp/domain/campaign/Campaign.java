@@ -40,7 +40,7 @@ public class Campaign {
                 .name(new Name(name))
                 .budget(new Money(budget))
                 .startDate(startDate)
-                .platform(platform)
+                .platform(CampaignPlatformEnum.getInicialPlatform(platform))
                 .status(CampaignStatusEnum.getInitialStatus(active))
                 .build();
     }
