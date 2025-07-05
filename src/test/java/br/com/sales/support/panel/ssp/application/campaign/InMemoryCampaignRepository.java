@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class InMemoryCampaignRepository implements CampaignRepository {
 
@@ -26,35 +27,36 @@ public class InMemoryCampaignRepository implements CampaignRepository {
     @Override
     public List<Campaign> getCampaignsByFilter(final CampaignFilter filter) {
 
-        List<Campaign> campaignsFiltered = campaignsById.values().stream().toList();
+        Stream<Campaign> campaignsFiltered = campaignsById.values().stream();
 
         if (filter.hasName()) {
-            campaignsFiltered = campaignsFiltered.stream()
-                    .filter(campaign -> campaign.getName().value().contains(filter.name().toUpperCase())).toList();
+            campaignsFiltered = campaignsFiltered
+                    .filter(campaign -> campaign.getName().value().contains(filter.name().toUpperCase()));
         }
 
         if (filter.hasStartDate()) {
-            campaignsFiltered = campaignsFiltered.stream()
+            campaignsFiltered = campaignsFiltered
                     .filter(campaign -> campaign.getStartDate().isEqual(filter.startDate()) || campaign.getStartDate()
-                            .isAfter(filter.startDate())).toList();
+                            .isAfter(filter.startDate()));
         }
 
         if (filter.hasEndDate()) {
-            campaignsFiltered = campaignsFiltered.stream()
+            campaignsFiltered = campaignsFiltered
                     .filter(campaign -> campaign.getStartDate().isBefore(filter.endDate()) || campaign.getStartDate()
-                            .isEqual(filter.endDate())).toList();
+                            .isEqual(filter.endDate()));
         }
 
         if (filter.hasBudget()) {
-            campaignsFiltered = campaignsFiltered.stream()
-                    .filter(campaign -> campaign.getBudget().value().compareTo(filter.budget()) >= 0).toList();
+            campaignsFiltered = campaignsFiltered
+                    .filter(campaign -> campaign.getBudget().value().compareTo(filter.budget()) >= 0);
         }
 
-        if (campaignsFiltered.isEmpty()) {
-            return List.of();
+        if (filter.hasStatus()) {
+            campaignsFiltered = campaignsFiltered
+                    .filter(campaign -> campaign.getStatus().equals(filter.status()));
         }
 
-        return campaignsFiltered;
+        return campaignsFiltered.toList();
     }
 
     @Override

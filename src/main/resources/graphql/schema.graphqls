@@ -4,7 +4,7 @@ type Query {
 }
 
 type Mutation {
-    createCampaign(name: String!, startDate: String, budget: Float, platform: CampaignPlatform, active: Boolean): Campaign!
+    createCampaign(name: String!, startDate: String, budget: Float, platform: CampaignPlatform): Campaign!
     deleteCampaign(id: ID!): Boolean!
 }
 

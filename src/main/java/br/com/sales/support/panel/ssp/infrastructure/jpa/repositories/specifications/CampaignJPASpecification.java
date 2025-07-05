@@ -20,7 +20,7 @@ public class CampaignJPASpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (filter.hasName()) {
-                predicates.add(criteriaBuilder.like(root.get(CampaignJPA_.NAME), "%" + filter.name().toUpperCase() + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get(CampaignJPA_.NAME)), "%" + filter.name().toUpperCase() + "%"));
             }
 
             if (filter.hasBudget()) {
@@ -32,7 +32,11 @@ public class CampaignJPASpecification {
             }
 
             if (filter.hasEndDate()) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(CampaignJPA_.START_DATE), filter.endDate()));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(CampaignJPA_.END_DATE), filter.endDate()));
+            }
+
+            if (filter.hasStatus()) {
+                predicates.add(criteriaBuilder.equal(root.get(CampaignJPA_.STATUS), filter.status()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

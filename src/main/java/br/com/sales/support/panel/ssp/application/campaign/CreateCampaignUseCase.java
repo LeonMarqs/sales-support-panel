@@ -21,21 +21,12 @@ public class CreateCampaignUseCase extends UseCase<CreateCampaignUseCase.Input, 
 
     @Override
     public Output execute(Input input) {
-        final Campaign newCampaign = Campaign.newCampaign(input.name(), input.budget(), input.startDate(), input.active(), input.platform());
+        final Campaign newCampaign = Campaign.newCampaign(input.name(), input.budget(), input.startDate(), input.platform());
         final Campaign createdCampaign = campaignRepository.create(newCampaign);
-
-        return Output.builder()
-                .id(createdCampaign.getCampaignID().value())
-                .name(createdCampaign.getName().value())
-                .budget(createdCampaign.getBudget().value())
-                .startDate(createdCampaign.getStartDate())
-                .endDate(createdCampaign.getEndDate())
-                .status(createdCampaign.getStatus())
-                .platform(createdCampaign.getPlatform())
-                .build();
+        return Output.from(createdCampaign);
     }
 
-    public record Input(String name, LocalDate startDate, BigDecimal budget, Boolean active,
+    public record Input(String name, LocalDate startDate, BigDecimal budget,
                         CampaignPlatformEnum platform) {
 
     }
@@ -43,6 +34,18 @@ public class CreateCampaignUseCase extends UseCase<CreateCampaignUseCase.Input, 
     @Builder
     public record Output(String id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate,
                          CampaignStatusEnum status, CampaignPlatformEnum platform) {
+
+        public static Output from(final Campaign campaign) {
+            return Output.builder()
+                    .id(campaign.getCampaignID().value())
+                    .name(campaign.getName().value())
+                    .budget(campaign.getBudget().value())
+                    .startDate(campaign.getStartDate())
+                    .endDate(campaign.getEndDate())
+                    .status(campaign.getStatus())
+                    .platform(campaign.getPlatform())
+                    .build();
+        }
 
     }
 

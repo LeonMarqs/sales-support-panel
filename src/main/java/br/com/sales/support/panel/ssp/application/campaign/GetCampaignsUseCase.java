@@ -20,25 +20,30 @@ public class GetCampaignsUseCase extends UseCase<GetCampaignsUseCase.Input, List
     @Override
     public List<Output> execute(Input input) {
         final List<Campaign> campaignsByFilter = campaignRepository.getCampaignsByFilter(CampaignFilter.with(input));
-
-        return campaignsByFilter.stream().map(campaign -> Output.builder()
-                .id(campaign.getCampaignID().value())
-                .name(campaign.getName().value())
-                .budget(campaign.getBudget().value())
-                .startDate(campaign.getStartDate())
-                .endDate(campaign.getEndDate())
-                .status(campaign.getStatus())
-                .platform(campaign.getPlatform())
-                .build()).toList();
+        return campaignsByFilter.stream().map(Output::from).toList();
     }
 
-    public record Input(String name, LocalDate startDate, LocalDate endDate, BigDecimal budget, String status) {
+    public record Input(String name, LocalDate startDate, LocalDate endDate, BigDecimal budget,
+                        CampaignStatusEnum status) {
 
     }
 
     @Builder
-    public record Output(String id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate, CampaignPlatformEnum platform,
+    public record Output(String id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate,
+                         CampaignPlatformEnum platform,
                          CampaignStatusEnum status) {
+
+        public static Output from(final Campaign campaign) {
+            return Output.builder()
+                    .id(campaign.getCampaignID().value())
+                    .name(campaign.getName().value())
+                    .budget(campaign.getBudget().value())
+                    .startDate(campaign.getStartDate())
+                    .endDate(campaign.getEndDate())
+                    .status(campaign.getStatus())
+                    .platform(campaign.getPlatform())
+                    .build();
+        }
     }
 
 }

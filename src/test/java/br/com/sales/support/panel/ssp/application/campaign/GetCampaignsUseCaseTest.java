@@ -29,9 +29,9 @@ class GetCampaignsUseCaseTest {
 
         final CampaignRepository campaignRepository = new InMemoryCampaignRepository();
 
-        campaignRepository.create(Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), true, CampaignPlatformEnum.FACEBOOK_ADS));
-        campaignRepository.create(Campaign.newCampaign("Campaign 2", BigDecimal.valueOf(1000.00), LocalDate.now(), false, CampaignPlatformEnum.GOOGLE_ADS));
-        campaignRepository.create(Campaign.newCampaign("Test Campaign 2", BigDecimal.valueOf(1000.00), LocalDate.now(), false, CampaignPlatformEnum.INSTAGRAM_ADS));
+        campaignRepository.create(Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS));
+        campaignRepository.create(Campaign.newCampaign("Campaign 2", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.GOOGLE_ADS));
+        campaignRepository.create(Campaign.newCampaign("Test Campaign 2", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.INSTAGRAM_ADS));
 
         GetCampaignsUseCase useCase = new GetCampaignsUseCase(campaignRepository);
         GetCampaignsUseCase.Input input = new GetCampaignsUseCase.Input("test", null, null, null, null);

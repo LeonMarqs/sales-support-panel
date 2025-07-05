@@ -1,6 +1,6 @@
 package br.com.sales.support.panel.ssp.domain.common;
 
-import br.com.sales.support.panel.ssp.domain.exceptions.ValidationException;
+import br.com.sales.support.panel.ssp.domain.exceptions.DomainException;
 
 import java.math.BigDecimal;
 
@@ -12,7 +12,7 @@ public record Money(BigDecimal value) {
         }
 
         if (BigDecimal.ZERO.compareTo(value) > 0) {
-            throw new ValidationException("Money cannot be less than zero");
+            throw new DomainException("Money cannot be less than zero");
         }
     }
 

@@ -2,7 +2,7 @@ package br.com.sales.support.panel.ssp.domain.campaign;
 
 import br.com.sales.support.panel.ssp.domain.common.Money;
 import br.com.sales.support.panel.ssp.domain.common.Name;
-import br.com.sales.support.panel.ssp.domain.exceptions.ValidationException;
+import br.com.sales.support.panel.ssp.domain.exceptions.DomainException;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,8 +14,8 @@ import java.util.Objects;
 public class Campaign {
 
     private final CampaignID campaignID;
-    private Name name;
-    private Money budget;
+    private final Name name;
+    private final Money budget;
     private LocalDate startDate;
     private LocalDate endDate;
     private CampaignStatusEnum status;
@@ -34,24 +34,32 @@ public class Campaign {
         this.validate();
     }
 
-    public static Campaign newCampaign(final String name, final BigDecimal budget, final LocalDate startDate, Boolean active, final CampaignPlatformEnum platform) {
+    public static Campaign newCampaign(final String name, final BigDecimal budget, final LocalDate startDate, final CampaignPlatformEnum platform) {
         return Campaign.builder()
                 .campaignID(CampaignID.unique())
                 .name(new Name(name))
                 .budget(new Money(budget))
                 .startDate(startDate)
-                .platform(CampaignPlatformEnum.getInicialPlatform(platform))
-                .status(CampaignStatusEnum.getInitialStatus(active))
+                .platform(platform != null ? platform : CampaignPlatformEnum.OTHER)
+                .status(CampaignStatusEnum.DRAFT)
                 .build();
+    }
+
+    public void completeCampaign() {
+        if (this.status == CampaignStatusEnum.COMPLETED) {
+            throw new DomainException("Campaign is already completed");
+        }
+        this.status = CampaignStatusEnum.COMPLETED;
+        this.endDate = LocalDate.now();
     }
 
     private void validate() {
         if (campaignID == null) {
-            throw new ValidationException("Campaign ID cannot be null");
+            throw new DomainException("Campaign ID cannot be null");
         }
 
         if (status == null) {
-            throw new ValidationException("Campaign status cannot be null or empty");
+            throw new DomainException("Campaign status cannot be null or empty");
         }
     }
 

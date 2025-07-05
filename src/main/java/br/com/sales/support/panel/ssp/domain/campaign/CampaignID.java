@@ -1,6 +1,6 @@
 package br.com.sales.support.panel.ssp.domain.campaign;
 
-import br.com.sales.support.panel.ssp.domain.exceptions.ValidationException;
+import br.com.sales.support.panel.ssp.domain.exceptions.DomainException;
 
 import java.util.UUID;
 
@@ -8,7 +8,7 @@ public record CampaignID(String value) {
 
     public CampaignID {
         if (value == null) {
-            throw new ValidationException("Campaign ID cannot be empty");
+            throw new DomainException("Campaign ID cannot be empty");
         }
     }
 
@@ -20,7 +20,7 @@ public record CampaignID(String value) {
         try {
             return new CampaignID(UUID.fromString(value).toString());
         } catch (IllegalArgumentException exception) {
-            throw new ValidationException("Invalid ID for campaign");
+            throw new DomainException("Invalid ID for campaign");
         }
     }
 

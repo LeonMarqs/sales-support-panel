@@ -4,6 +4,7 @@ import br.com.sales.support.panel.ssp.application.campaign.CreateCampaignUseCase
 import br.com.sales.support.panel.ssp.application.campaign.GetCampaignsUseCase;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
 import br.com.sales.support.panel.ssp.infrastructure.dtos.GetCampaignsFilterDTO;
+import br.com.sales.support.panel.ssp.domain.exceptions.InvalidInputException;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,23 +30,25 @@ public class CampaignResolver {
 
     @QueryMapping
     public List<GetCampaignsUseCase.Output> getCampaigns(@Argument Optional<GetCampaignsFilterDTO> filter) {
-        return getCampaignsUseCase.execute(
-                new GetCampaignsUseCase.Input(
-                        filter.map(GetCampaignsFilterDTO::name).orElse(null),
-                        filter.map(GetCampaignsFilterDTO::startDate).orElse(null),
-                        filter.map(GetCampaignsFilterDTO::endDate).orElse(null),
-                        filter.map(GetCampaignsFilterDTO::budget).orElse(null),
-                        filter.map(GetCampaignsFilterDTO::status).orElse(null)
-                )
-        );
+
+        final GetCampaignsUseCase.Input input = filter.map(f -> new GetCampaignsUseCase.Input(
+                f.name(), f.startDate(), f.endDate(), f.budget(), f.status()
+        )).orElse(null);
+
+        return getCampaignsUseCase.execute(input);
     }
 
     @MutationMapping
-    public CreateCampaignUseCase.Output createCampaign(@Argument String name, @Argument String startDate, @Argument String budget,
-                                                       @Argument Boolean active, @Argument CampaignPlatformEnum platform) {
-        return createCampaignUseCase.execute(
-                new CreateCampaignUseCase.Input(name, startDate != null ? LocalDate.parse(startDate) : null,
-                        budget != null ? new BigDecimal(budget) : null, active, platform));
+    public CreateCampaignUseCase.Output createCampaign(@Argument String name, @Argument String startDate, @Argument String budget, @Argument CampaignPlatformEnum platform) {
+        try {
+            final LocalDate parsedStartDate = startDate != null ? LocalDate.parse(startDate) : null;
+            final BigDecimal parsedBudget = budget != null ? new BigDecimal(budget) : null;
+
+            final var input = new CreateCampaignUseCase.Input(name, parsedStartDate, parsedBudget, platform);
+            return createCampaignUseCase.execute(input);
+        } catch (DateTimeParseException | NumberFormatException e) {
+            throw new InvalidInputException("Invalid format for date or budget.", e);
+        }
     }
 
 }
