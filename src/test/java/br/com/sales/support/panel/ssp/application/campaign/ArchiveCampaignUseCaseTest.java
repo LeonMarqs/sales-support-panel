@@ -14,10 +14,10 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class ActivateCampaignUseCaseTest {
+class ArchiveCampaignUseCaseTest {
 
     @Test
-    void shouldActivateCampaignSuccessfully() {
+    void shouldArchiveCampaignSuccessfully() {
         // Arrange
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
@@ -25,15 +25,15 @@ class ActivateCampaignUseCaseTest {
 
         final String campaignID = newCampaign.getCampaignID().value();
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(campaignID);
+        ArchiveCampaignUseCase useCase = new ArchiveCampaignUseCase(inMemoryCampaignRepository);
+        ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(campaignID);
 
         // Act
-        ActivateCampaignUseCase.Output output = useCase.execute(input);
+        ArchiveCampaignUseCase.Output output = useCase.execute(input);
 
         // Assert
         assertNotNull(output);
-        assertEquals(CampaignStatusEnum.ACTIVE, output.status());
+        assertEquals(CampaignStatusEnum.ARCHIVED, output.status());
     }
 
     @Test
@@ -43,8 +43,8 @@ class ActivateCampaignUseCaseTest {
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
         inMemoryCampaignRepository.create(newCampaign);
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input("123");
+        ArchiveCampaignUseCase useCase = new ArchiveCampaignUseCase(inMemoryCampaignRepository);
+        ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input("123");
 
         // Assert
         assertThrows(NotFoundException.class, () -> {
@@ -53,14 +53,14 @@ class ActivateCampaignUseCaseTest {
     }
 
     @Test
-    void shouldThrowErrorWhenCampaignIsAlreadyActive() {
+    void shouldThrowErrorWhenCampaignIsAlreadyArchived() {
         // Arrange
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
         final Campaign createdCampaign = inMemoryCampaignRepository.create(newCampaign);
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(createdCampaign.getCampaignID().value());
+        ArchiveCampaignUseCase useCase = new ArchiveCampaignUseCase(inMemoryCampaignRepository);
+        ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(createdCampaign.getCampaignID().value());
         useCase.execute(input);
 
         // Assert

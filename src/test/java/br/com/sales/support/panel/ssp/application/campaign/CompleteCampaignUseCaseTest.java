@@ -14,10 +14,10 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class ActivateCampaignUseCaseTest {
+class CompleteCampaignUseCaseTest {
 
     @Test
-    void shouldActivateCampaignSuccessfully() {
+    void shouldCompleteCampaignSuccessfully() {
         // Arrange
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
@@ -25,26 +25,30 @@ class ActivateCampaignUseCaseTest {
 
         final String campaignID = newCampaign.getCampaignID().value();
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(campaignID);
+        CompleteCampaignUseCase useCase = new CompleteCampaignUseCase(inMemoryCampaignRepository);
+        CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(campaignID);
+
+        ActivateCampaignUseCase activateUseCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
+        ActivateCampaignUseCase.Input activateInput = new ActivateCampaignUseCase.Input(campaignID);
 
         // Act
-        ActivateCampaignUseCase.Output output = useCase.execute(input);
+        activateUseCase.execute(activateInput);
+        CompleteCampaignUseCase.Output output = useCase.execute(input);
 
         // Assert
         assertNotNull(output);
-        assertEquals(CampaignStatusEnum.ACTIVE, output.status());
+        assertEquals(CampaignStatusEnum.COMPLETED, output.status());
+        assertEquals(LocalDate.now(), output.endDate());
     }
 
     @Test
     void shouldThrowErrorWhenCampaignIsNotFound() {
         // Arrange
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
-        Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
-        inMemoryCampaignRepository.create(newCampaign);
+        Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input("123");
+        CompleteCampaignUseCase useCase = new CompleteCampaignUseCase(inMemoryCampaignRepository);
+        CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input("123");
 
         // Assert
         assertThrows(NotFoundException.class, () -> {
@@ -53,14 +57,21 @@ class ActivateCampaignUseCaseTest {
     }
 
     @Test
-    void shouldThrowErrorWhenCampaignIsAlreadyActive() {
+    void shouldThrowErrorWhenCampaignIsAlreadyCompleted() {
         // Arrange
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
         final Campaign createdCampaign = inMemoryCampaignRepository.create(newCampaign);
+        final String campaignID = createdCampaign.getCampaignID().value();
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(createdCampaign.getCampaignID().value());
+        ActivateCampaignUseCase activateUseCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
+        ActivateCampaignUseCase.Input activateInput = new ActivateCampaignUseCase.Input(campaignID);
+
+        CompleteCampaignUseCase useCase = new CompleteCampaignUseCase(inMemoryCampaignRepository);
+        CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(createdCampaign.getCampaignID().value());
+
+        // Act
+        activateUseCase.execute(activateInput);
         useCase.execute(input);
 
         // Assert

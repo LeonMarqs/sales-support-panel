@@ -14,10 +14,10 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class ActivateCampaignUseCaseTest {
+class PauseCampaignUseCaseTest {
 
     @Test
-    void shouldActivateCampaignSuccessfully() {
+    void shouldPauseCampaignSuccessfully() {
         // Arrange
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
@@ -25,26 +25,29 @@ class ActivateCampaignUseCaseTest {
 
         final String campaignID = newCampaign.getCampaignID().value();
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(campaignID);
+        PauseCampaignUseCase useCase = new PauseCampaignUseCase(inMemoryCampaignRepository);
+        PauseCampaignUseCase.Input input = new PauseCampaignUseCase.Input(campaignID);
+
+        ActivateCampaignUseCase activateUseCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
+        ActivateCampaignUseCase.Input activateInput = new ActivateCampaignUseCase.Input(campaignID);
 
         // Act
-        ActivateCampaignUseCase.Output output = useCase.execute(input);
+        activateUseCase.execute(activateInput);
+        PauseCampaignUseCase.Output output = useCase.execute(input);
 
         // Assert
         assertNotNull(output);
-        assertEquals(CampaignStatusEnum.ACTIVE, output.status());
+        assertEquals(CampaignStatusEnum.PAUSED, output.status());
     }
 
     @Test
     void shouldThrowErrorWhenCampaignIsNotFound() {
         // Arrange
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
-        Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
-        inMemoryCampaignRepository.create(newCampaign);
+        Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input("123");
+        PauseCampaignUseCase useCase = new PauseCampaignUseCase(inMemoryCampaignRepository);
+        PauseCampaignUseCase.Input input = new PauseCampaignUseCase.Input("123");
 
         // Assert
         assertThrows(NotFoundException.class, () -> {
@@ -53,14 +56,21 @@ class ActivateCampaignUseCaseTest {
     }
 
     @Test
-    void shouldThrowErrorWhenCampaignIsAlreadyActive() {
+    void shouldThrowErrorWhenCampaignIsAlreadyPaused() {
         // Arrange
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
         final Campaign createdCampaign = inMemoryCampaignRepository.create(newCampaign);
+        final String campaignID = createdCampaign.getCampaignID().value();
 
-        ActivateCampaignUseCase useCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
-        ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(createdCampaign.getCampaignID().value());
+        ActivateCampaignUseCase activateUseCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
+        ActivateCampaignUseCase.Input activateInput = new ActivateCampaignUseCase.Input(campaignID);
+
+        PauseCampaignUseCase useCase = new PauseCampaignUseCase(inMemoryCampaignRepository);
+        PauseCampaignUseCase.Input input = new PauseCampaignUseCase.Input(createdCampaign.getCampaignID().value());
+
+        // Act
+        activateUseCase.execute(activateInput);
         useCase.execute(input);
 
         // Assert

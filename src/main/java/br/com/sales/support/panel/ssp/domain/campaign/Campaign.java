@@ -100,16 +100,15 @@ public class Campaign {
     }
 
     private boolean canBeCompleted() {
-        return this.status == CampaignStatusEnum.ACTIVE || this.status == CampaignStatusEnum.DRAFT ||
-                this.status == CampaignStatusEnum.COMPLETED;
+        return this.status == CampaignStatusEnum.ACTIVE;
     }
 
     private boolean canBePaused() {
-        return this.status == CampaignStatusEnum.ACTIVE || this.status == CampaignStatusEnum.DRAFT;
+        return this.status == CampaignStatusEnum.ACTIVE;
     }
 
     private boolean canBeActivated() {
-        return this.status == CampaignStatusEnum.DRAFT || this.status == CampaignStatusEnum.PAUSED;
+        return this.status == CampaignStatusEnum.DRAFT || this.status == CampaignStatusEnum.PAUSED || this.status == CampaignStatusEnum.ARCHIVED;
     }
 
     private boolean canBeArchived() {
