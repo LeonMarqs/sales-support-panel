@@ -1,8 +1,6 @@
 package br.com.sales.support.panel.ssp.infrastructure.graphql;
 
-import br.com.sales.support.panel.ssp.application.campaign.ActivateCampaignUseCase;
-import br.com.sales.support.panel.ssp.application.campaign.CreateCampaignUseCase;
-import br.com.sales.support.panel.ssp.application.campaign.GetCampaignsUseCase;
+import br.com.sales.support.panel.ssp.application.campaign.*;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
 import br.com.sales.support.panel.ssp.domain.exceptions.InvalidInputException;
 import br.com.sales.support.panel.ssp.infrastructure.dtos.GetCampaignsFilterDTO;
@@ -24,11 +22,21 @@ public class CampaignResolver {
     private final GetCampaignsUseCase getCampaignsUseCase;
     private final CreateCampaignUseCase createCampaignUseCase;
     private final ActivateCampaignUseCase activateCampaignUseCase;
+    private final CompleteCampaignUseCase completeCampaignUseCase;
+    private final ArchiveCampaignUseCase archiveCampaignUseCase;
+    private final CancelCampaignUseCase cancelCampaignUseCase;
+    private final PauseCampaignUseCase pauseCampaignUseCase;
 
-    public CampaignResolver(final GetCampaignsUseCase getCampaignsUseCase, final CreateCampaignUseCase createCampaignUseCase, final ActivateCampaignUseCase activateCampaignUseCase) {
+    public CampaignResolver(final GetCampaignsUseCase getCampaignsUseCase, final CreateCampaignUseCase createCampaignUseCase, final ActivateCampaignUseCase activateCampaignUseCase,
+                            final CompleteCampaignUseCase completeCampaignUseCase, final ArchiveCampaignUseCase archiveCampaignUseCase,
+                            final CancelCampaignUseCase cancelCampaignUseCase, final PauseCampaignUseCase pauseCampaignUseCase) {
         this.getCampaignsUseCase = Objects.requireNonNull(getCampaignsUseCase);
         this.createCampaignUseCase = Objects.requireNonNull(createCampaignUseCase);
         this.activateCampaignUseCase = Objects.requireNonNull(activateCampaignUseCase);
+        this.completeCampaignUseCase = Objects.requireNonNull(completeCampaignUseCase);
+        this.archiveCampaignUseCase = Objects.requireNonNull(archiveCampaignUseCase);
+        this.cancelCampaignUseCase = Objects.requireNonNull(cancelCampaignUseCase);
+        this.pauseCampaignUseCase = Objects.requireNonNull(pauseCampaignUseCase);
     }
 
     @QueryMapping
@@ -58,5 +66,29 @@ public class CampaignResolver {
     public ActivateCampaignUseCase.Output activateCampaign(@Argument String id) {
         final ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(id);
         return activateCampaignUseCase.execute(input);
+    }
+
+    @MutationMapping
+    public CompleteCampaignUseCase.Output completeCampaign(@Argument String id) {
+        final CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(id);
+        return completeCampaignUseCase.execute(input);
+    }
+
+    @MutationMapping
+    public ArchiveCampaignUseCase.Output archiveCampaign(@Argument String id) {
+        final ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(id);
+        return archiveCampaignUseCase.execute(input);
+    }
+
+    @MutationMapping
+    public CancelCampaignUseCase.Output cancelCampaign(@Argument String id) {
+        final CancelCampaignUseCase.Input input = new CancelCampaignUseCase.Input(id);
+        return cancelCampaignUseCase.execute(input);
+    }
+
+    @MutationMapping
+    public PauseCampaignUseCase.Output pauseCampaign(@Argument String id) {
+        final PauseCampaignUseCase.Input input = new PauseCampaignUseCase.Input(id);
+        return pauseCampaignUseCase.execute(input);
     }
 }
