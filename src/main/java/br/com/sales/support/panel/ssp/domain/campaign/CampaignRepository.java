@@ -11,4 +11,6 @@ public interface CampaignRepository {
 
     Campaign create(Campaign campaign);
 
+    Campaign save(Campaign campaign);
+
 }

@@ -2,38 +2,39 @@ package br.com.sales.support.panel.ssp.application.campaign;
 
 import br.com.sales.support.panel.ssp.application.UseCase;
 import br.com.sales.support.panel.ssp.domain.campaign.*;
+import br.com.sales.support.panel.ssp.domain.exceptions.NotFoundException;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 @Service
-public class GetCampaignsUseCase extends UseCase<GetCampaignsUseCase.Input, List<GetCampaignsUseCase.Output>> {
+public class ActivateCampaignUseCase extends UseCase<ActivateCampaignUseCase.Input, ActivateCampaignUseCase.Output> {
 
     private final CampaignRepository campaignRepository;
 
-    public GetCampaignsUseCase(final CampaignRepository campaignRepository) {
+    public ActivateCampaignUseCase(final CampaignRepository campaignRepository) {
         this.campaignRepository = Objects.requireNonNull(campaignRepository);
     }
 
     @Override
-    public List<Output> execute(Input input) {
-        final List<Campaign> campaignsByFilter = campaignRepository.getCampaignsByFilter(CampaignFilter.with(input));
-        return campaignsByFilter.stream().map(Output::from).toList();
+    public Output execute(Input input) {
+        final Campaign campaign = campaignRepository.getCampaignById(new CampaignID(input.id)).orElseThrow(() -> new NotFoundException("Campaign not found with ID: " + input.id));
+        campaign.activate();
+
+        final Campaign updatedCampaign = campaignRepository.save(campaign);
+        return Output.from(updatedCampaign);
     }
 
-    public record Input(String name, LocalDate startDate, LocalDate endDate, BigDecimal budget,
-                        CampaignStatusEnum status) {
+    public record Input(String id) {
 
     }
 
     @Builder
     public record Output(String id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate,
-                         CampaignPlatformEnum platform,
-                         CampaignStatusEnum status) {
+                         CampaignStatusEnum status, CampaignPlatformEnum platform) {
 
         public static Output from(final Campaign campaign) {
             return Output.builder()
@@ -46,6 +47,7 @@ public class GetCampaignsUseCase extends UseCase<GetCampaignsUseCase.Input, List
                     .platform(campaign.getPlatform())
                     .build();
         }
+
     }
 
 }

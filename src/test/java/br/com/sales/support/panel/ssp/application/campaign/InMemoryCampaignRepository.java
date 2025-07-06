@@ -65,4 +65,10 @@ public class InMemoryCampaignRepository implements CampaignRepository {
         return campaign;
     }
 
+    @Override
+    public Campaign save(Campaign campaign) {
+        campaignsById.put(campaign.getCampaignID().value(), campaign);
+        return campaign;
+    }
+
 }

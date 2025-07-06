@@ -33,4 +33,49 @@ class CampaignTest {
         assertThrows(DomainException.class, () -> Campaign.newCampaign("Test campaign", budget, LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS));
     }
 
+    @Test
+    void shouldActivateCampaign() {
+        final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        campaign.activate();
+
+        assertEquals(CampaignStatusEnum.ACTIVE, campaign.getStatus());
+        assertNotNull(campaign.getCampaignID().value());
+    }
+
+    @Test
+    void shouldPauseCampaign() {
+        final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        campaign.pause();
+
+        assertEquals(CampaignStatusEnum.PAUSED, campaign.getStatus());
+        assertNotNull(campaign.getCampaignID().value());
+    }
+
+    @Test
+    void shouldCancelCampaign() {
+        final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        campaign.cancel();
+
+        assertEquals(CampaignStatusEnum.CANCELLED, campaign.getStatus());
+        assertNotNull(campaign.getCampaignID().value());
+    }
+
+    @Test
+    void shouldArchiveCampaign() {
+        final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        campaign.archive();
+
+        assertEquals(CampaignStatusEnum.ARCHIVED, campaign.getStatus());
+        assertNotNull(campaign.getCampaignID().value());
+    }
+
+    @Test
+    void shouldCompleteCampaign() {
+        final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        campaign.complete();
+
+        assertEquals(CampaignStatusEnum.COMPLETED, campaign.getStatus());
+        assertNotNull(campaign.getCampaignID().value());
+    }
+
 }

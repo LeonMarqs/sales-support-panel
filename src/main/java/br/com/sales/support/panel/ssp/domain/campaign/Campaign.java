@@ -45,13 +45,49 @@ public class Campaign {
                 .build();
     }
 
-    public void completeCampaign() {
-        if (this.status == CampaignStatusEnum.COMPLETED) {
-            throw new DomainException("Campaign is already completed");
+    public void complete() {
+        if (!canBeCompleted()) {
+            throw new DomainException("Campaign status does not allow completion");
         }
+
         this.status = CampaignStatusEnum.COMPLETED;
         this.endDate = LocalDate.now();
     }
+
+    public void pause() {
+        if (!canBePaused()) {
+            throw new DomainException("Campaign status does not allow pausing");
+        }
+
+        this.status = CampaignStatusEnum.PAUSED;
+    }
+
+    public void activate() {
+        if (!canBeActivated()) {
+            throw new DomainException("Campaign status does not allow activation");
+        }
+
+        this.status = CampaignStatusEnum.ACTIVE;
+        this.startDate = LocalDate.now();
+    }
+
+    public void archive() {
+        if (!canBeArchived()) {
+            throw new DomainException("Campaign status does not allow archiving");
+        }
+
+        this.status = CampaignStatusEnum.ARCHIVED;
+    }
+
+    public void cancel() {
+        if (!canBeCancelled()) {
+            throw new DomainException("Campaign status does not allow cancellation");
+        }
+
+        this.status = CampaignStatusEnum.CANCELLED;
+        this.endDate = LocalDate.now();
+    }
+
 
     private void validate() {
         if (campaignID == null) {
@@ -61,6 +97,28 @@ public class Campaign {
         if (status == null) {
             throw new DomainException("Campaign status cannot be null or empty");
         }
+    }
+
+    private boolean canBeCompleted() {
+        return this.status == CampaignStatusEnum.ACTIVE || this.status == CampaignStatusEnum.DRAFT ||
+                this.status == CampaignStatusEnum.COMPLETED;
+    }
+
+    private boolean canBePaused() {
+        return this.status == CampaignStatusEnum.ACTIVE || this.status == CampaignStatusEnum.DRAFT;
+    }
+
+    private boolean canBeActivated() {
+        return this.status == CampaignStatusEnum.DRAFT || this.status == CampaignStatusEnum.PAUSED;
+    }
+
+    private boolean canBeArchived() {
+        return this.status != CampaignStatusEnum.COMPLETED && this.status != CampaignStatusEnum.CANCELLED && this.status != CampaignStatusEnum.ARCHIVED;
+    }
+
+    private boolean canBeCancelled() {
+        return this.status == CampaignStatusEnum.DRAFT || this.status == CampaignStatusEnum.PAUSED ||
+                this.status == CampaignStatusEnum.ACTIVE;
     }
 
     @Override

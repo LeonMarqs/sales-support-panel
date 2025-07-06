@@ -1,5 +1,6 @@
 package br.com.sales.support.panel.ssp.infrastructure.configurations;
 
+import br.com.sales.support.panel.ssp.application.campaign.ActivateCampaignUseCase;
 import br.com.sales.support.panel.ssp.application.campaign.CreateCampaignUseCase;
 import br.com.sales.support.panel.ssp.application.campaign.GetCampaignsUseCase;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignRepository;
@@ -26,5 +27,8 @@ public class UseCaseConfig {
     public CreateCampaignUseCase createCampaignUseCase() {
         return new CreateCampaignUseCase(campaignRepository);
     }
+
+    @Bean
+    public ActivateCampaignUseCase activateCampaignUseCase() {  return new ActivateCampaignUseCase(campaignRepository); }
 
 }

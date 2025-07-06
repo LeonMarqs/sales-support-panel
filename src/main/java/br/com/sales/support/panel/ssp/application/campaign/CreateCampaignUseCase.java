@@ -6,11 +6,13 @@ import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignRepository;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignStatusEnum;
 import lombok.Builder;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Service
 public class CreateCampaignUseCase extends UseCase<CreateCampaignUseCase.Input, CreateCampaignUseCase.Output> {
 
     private final CampaignRepository campaignRepository;

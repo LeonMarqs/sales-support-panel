@@ -1,10 +1,11 @@
 package br.com.sales.support.panel.ssp.infrastructure.graphql;
 
+import br.com.sales.support.panel.ssp.application.campaign.ActivateCampaignUseCase;
 import br.com.sales.support.panel.ssp.application.campaign.CreateCampaignUseCase;
 import br.com.sales.support.panel.ssp.application.campaign.GetCampaignsUseCase;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
-import br.com.sales.support.panel.ssp.infrastructure.dtos.GetCampaignsFilterDTO;
 import br.com.sales.support.panel.ssp.domain.exceptions.InvalidInputException;
+import br.com.sales.support.panel.ssp.infrastructure.dtos.GetCampaignsFilterDTO;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -22,10 +23,12 @@ public class CampaignResolver {
 
     private final GetCampaignsUseCase getCampaignsUseCase;
     private final CreateCampaignUseCase createCampaignUseCase;
+    private final ActivateCampaignUseCase activateCampaignUseCase;
 
-    public CampaignResolver(final GetCampaignsUseCase getCampaignsUseCase, final CreateCampaignUseCase createCampaignUseCase) {
+    public CampaignResolver(final GetCampaignsUseCase getCampaignsUseCase, final CreateCampaignUseCase createCampaignUseCase, final ActivateCampaignUseCase activateCampaignUseCase) {
         this.getCampaignsUseCase = Objects.requireNonNull(getCampaignsUseCase);
         this.createCampaignUseCase = Objects.requireNonNull(createCampaignUseCase);
+        this.activateCampaignUseCase = Objects.requireNonNull(activateCampaignUseCase);
     }
 
     @QueryMapping
@@ -51,4 +54,9 @@ public class CampaignResolver {
         }
     }
 
+    @MutationMapping
+    public ActivateCampaignUseCase.Output activateCampaign(@Argument String id) {
+        final ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(id);
+        return activateCampaignUseCase.execute(input);
+    }
 }

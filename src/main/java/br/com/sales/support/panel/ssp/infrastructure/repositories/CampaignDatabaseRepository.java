@@ -43,4 +43,10 @@ public class CampaignDatabaseRepository implements CampaignRepository {
         return campaignJPARepository.save(CampaignJPA.of(campaign)).toCampaign();
     }
 
+    @Override
+    public Campaign save(Campaign campaign) {
+        Objects.requireNonNull(campaign, "Campaign must not be null");
+        return campaignJPARepository.save(CampaignJPA.of(campaign)).toCampaign();
+    }
+
 }
