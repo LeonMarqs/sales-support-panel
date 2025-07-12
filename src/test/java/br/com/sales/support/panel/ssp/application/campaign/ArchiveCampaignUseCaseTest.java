@@ -1,9 +1,6 @@
 package br.com.sales.support.panel.ssp.application.campaign;
 
-import br.com.sales.support.panel.ssp.domain.campaign.Campaign;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignRepository;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignStatusEnum;
+import br.com.sales.support.panel.ssp.domain.campaign.*;
 import br.com.sales.support.panel.ssp.domain.exceptions.DomainException;
 import br.com.sales.support.panel.ssp.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -23,7 +20,7 @@ class ArchiveCampaignUseCaseTest {
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
         inMemoryCampaignRepository.create(newCampaign);
 
-        final String campaignID = newCampaign.getCampaignID().value();
+        final CampaignID campaignID = newCampaign.getCampaignID();
 
         ArchiveCampaignUseCase useCase = new ArchiveCampaignUseCase(inMemoryCampaignRepository);
         ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(campaignID);
@@ -44,7 +41,7 @@ class ArchiveCampaignUseCaseTest {
         inMemoryCampaignRepository.create(newCampaign);
 
         ArchiveCampaignUseCase useCase = new ArchiveCampaignUseCase(inMemoryCampaignRepository);
-        ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input("123");
+        ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(new CampaignID("123"));
 
         // Assert
         assertThrows(NotFoundException.class, () -> {
@@ -60,7 +57,7 @@ class ArchiveCampaignUseCaseTest {
         final Campaign createdCampaign = inMemoryCampaignRepository.create(newCampaign);
 
         ArchiveCampaignUseCase useCase = new ArchiveCampaignUseCase(inMemoryCampaignRepository);
-        ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(createdCampaign.getCampaignID().value());
+        ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(createdCampaign.getCampaignID());
         useCase.execute(input);
 
         // Assert

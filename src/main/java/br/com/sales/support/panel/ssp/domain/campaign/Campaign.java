@@ -14,8 +14,8 @@ import java.util.Objects;
 public class Campaign {
 
     private final CampaignID campaignID;
-    private final Name name;
-    private final Money budget;
+    private Name name;
+    private Money budget;
     private LocalDate startDate;
     private LocalDate endDate;
     private CampaignStatusEnum status;
@@ -88,6 +88,25 @@ public class Campaign {
         this.endDate = LocalDate.now();
     }
 
+    public void changeName(final Name name) {
+        this.name = name;
+    }
+
+    public void changeBudget(final Money budget) {
+        this.budget = budget;
+    }
+
+    public void changeStartDate(final LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void changeEndDate(final LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void changePlatform(final CampaignPlatformEnum platform) {
+        this.platform = platform != null ? platform : CampaignPlatformEnum.OTHER;
+    }
 
     private void validate() {
         if (campaignID == null) {

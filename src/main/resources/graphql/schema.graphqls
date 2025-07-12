@@ -6,6 +6,11 @@ type Query {
 type Mutation {
     createCampaign(name: String!, startDate: String, budget: Float, platform: CampaignPlatform): Campaign!
     deleteCampaign(id: ID!): Boolean!
+    activateCampaign(id: ID!): Campaign!
+    pauseCampaign(id: ID!): Campaign!
+    completeCampaign(id: ID!): Campaign!
+    archiveCampaign(id: ID!): Campaign!
+
 }
 
 type Campaign {

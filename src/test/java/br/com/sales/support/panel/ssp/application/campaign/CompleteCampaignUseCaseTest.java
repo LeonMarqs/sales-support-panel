@@ -1,9 +1,6 @@
 package br.com.sales.support.panel.ssp.application.campaign;
 
-import br.com.sales.support.panel.ssp.domain.campaign.Campaign;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignRepository;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignStatusEnum;
+import br.com.sales.support.panel.ssp.domain.campaign.*;
 import br.com.sales.support.panel.ssp.domain.exceptions.DomainException;
 import br.com.sales.support.panel.ssp.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -23,7 +20,7 @@ class CompleteCampaignUseCaseTest {
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
         inMemoryCampaignRepository.create(newCampaign);
 
-        final String campaignID = newCampaign.getCampaignID().value();
+        final CampaignID campaignID = newCampaign.getCampaignID();
 
         CompleteCampaignUseCase useCase = new CompleteCampaignUseCase(inMemoryCampaignRepository);
         CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(campaignID);
@@ -48,7 +45,7 @@ class CompleteCampaignUseCaseTest {
         Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
 
         CompleteCampaignUseCase useCase = new CompleteCampaignUseCase(inMemoryCampaignRepository);
-        CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input("123");
+        CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(new CampaignID("123"));
 
         // Assert
         assertThrows(NotFoundException.class, () -> {
@@ -62,13 +59,13 @@ class CompleteCampaignUseCaseTest {
         CampaignRepository inMemoryCampaignRepository = new InMemoryCampaignRepository();
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
         final Campaign createdCampaign = inMemoryCampaignRepository.create(newCampaign);
-        final String campaignID = createdCampaign.getCampaignID().value();
+        final CampaignID campaignID = createdCampaign.getCampaignID();
 
         ActivateCampaignUseCase activateUseCase = new ActivateCampaignUseCase(inMemoryCampaignRepository);
         ActivateCampaignUseCase.Input activateInput = new ActivateCampaignUseCase.Input(campaignID);
 
         CompleteCampaignUseCase useCase = new CompleteCampaignUseCase(inMemoryCampaignRepository);
-        CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(createdCampaign.getCampaignID().value());
+        CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(createdCampaign.getCampaignID());
 
         // Act
         activateUseCase.execute(activateInput);

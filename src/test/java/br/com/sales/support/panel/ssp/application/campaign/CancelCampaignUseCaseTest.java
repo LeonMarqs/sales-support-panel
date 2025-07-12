@@ -1,9 +1,6 @@
 package br.com.sales.support.panel.ssp.application.campaign;
 
-import br.com.sales.support.panel.ssp.domain.campaign.Campaign;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignRepository;
-import br.com.sales.support.panel.ssp.domain.campaign.CampaignStatusEnum;
+import br.com.sales.support.panel.ssp.domain.campaign.*;
 import br.com.sales.support.panel.ssp.domain.exceptions.DomainException;
 import br.com.sales.support.panel.ssp.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -23,7 +20,7 @@ class CancelCampaignUseCaseTest {
         Campaign newCampaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
         inMemoryCampaignRepository.create(newCampaign);
 
-        final String campaignID = newCampaign.getCampaignID().value();
+        final CampaignID campaignID = newCampaign.getCampaignID();
 
         CancelCampaignUseCase useCase = new CancelCampaignUseCase(inMemoryCampaignRepository);
         CancelCampaignUseCase.Input input = new CancelCampaignUseCase.Input(campaignID);
@@ -44,7 +41,7 @@ class CancelCampaignUseCaseTest {
         inMemoryCampaignRepository.create(newCampaign);
 
         CancelCampaignUseCase useCase = new CancelCampaignUseCase(inMemoryCampaignRepository);
-        CancelCampaignUseCase.Input input = new CancelCampaignUseCase.Input("123");
+        CancelCampaignUseCase.Input input = new CancelCampaignUseCase.Input(new CampaignID("123"));
 
         // Assert
         assertThrows(NotFoundException.class, () -> {
@@ -60,7 +57,7 @@ class CancelCampaignUseCaseTest {
         final Campaign createdCampaign = inMemoryCampaignRepository.create(newCampaign);
 
         CancelCampaignUseCase useCase = new CancelCampaignUseCase(inMemoryCampaignRepository);
-        CancelCampaignUseCase.Input input = new CancelCampaignUseCase.Input(createdCampaign.getCampaignID().value());
+        CancelCampaignUseCase.Input input = new CancelCampaignUseCase.Input(createdCampaign.getCampaignID());
         useCase.execute(input);
 
         // Assert

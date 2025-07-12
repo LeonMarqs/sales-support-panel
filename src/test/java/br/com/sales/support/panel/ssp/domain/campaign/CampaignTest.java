@@ -45,6 +45,7 @@ class CampaignTest {
     @Test
     void shouldPauseCampaign() {
         final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        campaign.activate();
         campaign.pause();
 
         assertEquals(CampaignStatusEnum.PAUSED, campaign.getStatus());
@@ -72,6 +73,7 @@ class CampaignTest {
     @Test
     void shouldCompleteCampaign() {
         final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        campaign.activate();
         campaign.complete();
 
         assertEquals(CampaignStatusEnum.COMPLETED, campaign.getStatus());

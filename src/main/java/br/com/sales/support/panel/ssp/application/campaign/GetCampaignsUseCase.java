@@ -2,6 +2,8 @@ package br.com.sales.support.panel.ssp.application.campaign;
 
 import br.com.sales.support.panel.ssp.application.UseCase;
 import br.com.sales.support.panel.ssp.domain.campaign.*;
+import br.com.sales.support.panel.ssp.domain.common.Money;
+import br.com.sales.support.panel.ssp.domain.common.Name;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +33,12 @@ public class GetCampaignsUseCase extends UseCase<GetCampaignsUseCase.Input, List
     }
 
     @Builder
-    public record Output(String id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate,
-                         CampaignPlatformEnum platform,
-                         CampaignStatusEnum status) {
+    public record Output(CampaignID id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate,
+                         CampaignStatusEnum status, CampaignPlatformEnum platform) {
 
         public static Output from(final Campaign campaign) {
             return Output.builder()
-                    .id(campaign.getCampaignID().value())
+                    .id(campaign.getCampaignID())
                     .name(campaign.getName().value())
                     .budget(campaign.getBudget().value())
                     .startDate(campaign.getStartDate())

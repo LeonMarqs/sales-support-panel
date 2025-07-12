@@ -1,6 +1,7 @@
 package br.com.sales.support.panel.ssp.infrastructure.graphql;
 
 import br.com.sales.support.panel.ssp.application.campaign.*;
+import br.com.sales.support.panel.ssp.domain.campaign.CampaignID;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
 import br.com.sales.support.panel.ssp.domain.exceptions.InvalidInputException;
 import br.com.sales.support.panel.ssp.infrastructure.dtos.GetCampaignsFilterDTO;
@@ -64,31 +65,31 @@ public class CampaignResolver {
 
     @MutationMapping
     public ActivateCampaignUseCase.Output activateCampaign(@Argument String id) {
-        final ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(id);
+        final ActivateCampaignUseCase.Input input = new ActivateCampaignUseCase.Input(new CampaignID(id));
         return activateCampaignUseCase.execute(input);
     }
 
     @MutationMapping
     public CompleteCampaignUseCase.Output completeCampaign(@Argument String id) {
-        final CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(id);
+        final CompleteCampaignUseCase.Input input = new CompleteCampaignUseCase.Input(new CampaignID(id));
         return completeCampaignUseCase.execute(input);
     }
 
     @MutationMapping
     public ArchiveCampaignUseCase.Output archiveCampaign(@Argument String id) {
-        final ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(id);
+        final ArchiveCampaignUseCase.Input input = new ArchiveCampaignUseCase.Input(new CampaignID(id));
         return archiveCampaignUseCase.execute(input);
     }
 
     @MutationMapping
     public CancelCampaignUseCase.Output cancelCampaign(@Argument String id) {
-        final CancelCampaignUseCase.Input input = new CancelCampaignUseCase.Input(id);
+        final CancelCampaignUseCase.Input input = new CancelCampaignUseCase.Input(new CampaignID(id));
         return cancelCampaignUseCase.execute(input);
     }
 
     @MutationMapping
     public PauseCampaignUseCase.Output pauseCampaign(@Argument String id) {
-        final PauseCampaignUseCase.Input input = new PauseCampaignUseCase.Input(id);
+        final PauseCampaignUseCase.Input input = new PauseCampaignUseCase.Input(new CampaignID(id));
         return pauseCampaignUseCase.execute(input);
     }
 }
