@@ -1,22 +1,22 @@
 type Query {
     getCampaigns(filter: CampaignFilter): [Campaign]!
-    campaign(id: ID!): Campaign
 }
 
 type Mutation {
     createCampaign(name: String!, startDate: String, budget: Float, platform: CampaignPlatform): Campaign!
-    deleteCampaign(id: ID!): Boolean!
     activateCampaign(id: ID!): Campaign!
     pauseCampaign(id: ID!): Campaign!
     completeCampaign(id: ID!): Campaign!
     archiveCampaign(id: ID!): Campaign!
-
+    cancelCampaign(id: ID!): Campaign!
+    updateDetailsCampaign(id: ID!, details: UpdateDetailsCampaign): Campaign!
 }
 
 type Campaign {
     id: ID!
     name: String!
     startDate: String
+    endDate: String
     budget: Float
     status: CampaignStatus!
     platform: CampaignPlatform
@@ -40,6 +40,14 @@ enum CampaignPlatform {
     SNAPCHAT_ADS
     YOUTUBE_ADS
     OTHER
+}
+
+input UpdateDetailsCampaign {
+    name: String
+    startDate: String
+    endDate: String
+    budget: Float
+    platform: CampaignPlatform
 }
 
 input CampaignFilter {

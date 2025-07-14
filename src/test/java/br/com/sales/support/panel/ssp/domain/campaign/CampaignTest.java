@@ -1,5 +1,6 @@
 package br.com.sales.support.panel.ssp.domain.campaign;
 
+import br.com.sales.support.panel.ssp.domain.common.Name;
 import br.com.sales.support.panel.ssp.domain.exceptions.DomainException;
 import org.junit.jupiter.api.Test;
 
@@ -78,6 +79,21 @@ class CampaignTest {
 
         assertEquals(CampaignStatusEnum.COMPLETED, campaign.getStatus());
         assertNotNull(campaign.getCampaignID().value());
+    }
+
+    @Test
+    void shouldUpdateCampaignName() {
+        final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        final String newName = "Updated Campaign Name";
+        campaign.changeName(new Name(newName));
+
+        assertEquals(newName.toUpperCase(), campaign.getName().value());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenChangingNameToNull() {
+        final Campaign campaign = Campaign.newCampaign("Test Campaign", BigDecimal.valueOf(1000.00), LocalDate.now(), CampaignPlatformEnum.FACEBOOK_ADS);
+        assertThrows(DomainException.class, () -> campaign.changeName(null));
     }
 
 }

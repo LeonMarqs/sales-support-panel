@@ -35,12 +35,12 @@ public class CompleteCampaignUseCase extends UseCase<CompleteCampaignUseCase.Inp
     }
 
     @Builder
-    public record Output(CampaignID id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate,
+    public record Output(String id, String name, BigDecimal budget, LocalDate startDate, LocalDate endDate,
                          CampaignStatusEnum status, CampaignPlatformEnum platform) {
 
         public static Output from(final Campaign campaign) {
             return Output.builder()
-                    .id(campaign.getCampaignID())
+                    .id(campaign.getCampaignID().value())
                     .name(campaign.getName().value())
                     .budget(campaign.getBudget().value())
                     .startDate(campaign.getStartDate())

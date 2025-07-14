@@ -51,4 +51,9 @@ public class UseCaseConfig {
         return new PauseCampaignUseCase(campaignRepository);
     }
 
+    @Bean
+    public UpdateDetailsCampaignUseCase updateDetailsCampaignUseCase() {
+        return new UpdateDetailsCampaignUseCase(campaignRepository);
+    }
+
 }

@@ -5,6 +5,7 @@ import br.com.sales.support.panel.ssp.domain.campaign.CampaignID;
 import br.com.sales.support.panel.ssp.domain.campaign.CampaignPlatformEnum;
 import br.com.sales.support.panel.ssp.domain.exceptions.InvalidInputException;
 import br.com.sales.support.panel.ssp.infrastructure.dtos.GetCampaignsFilterDTO;
+import br.com.sales.support.panel.ssp.infrastructure.graphql.dto.UpdateDetailsCampaignDTO;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -27,10 +28,11 @@ public class CampaignResolver {
     private final ArchiveCampaignUseCase archiveCampaignUseCase;
     private final CancelCampaignUseCase cancelCampaignUseCase;
     private final PauseCampaignUseCase pauseCampaignUseCase;
+    private final UpdateDetailsCampaignUseCase updateDetailsCampaignUseCase;
 
     public CampaignResolver(final GetCampaignsUseCase getCampaignsUseCase, final CreateCampaignUseCase createCampaignUseCase, final ActivateCampaignUseCase activateCampaignUseCase,
                             final CompleteCampaignUseCase completeCampaignUseCase, final ArchiveCampaignUseCase archiveCampaignUseCase,
-                            final CancelCampaignUseCase cancelCampaignUseCase, final PauseCampaignUseCase pauseCampaignUseCase) {
+                            final CancelCampaignUseCase cancelCampaignUseCase, final PauseCampaignUseCase pauseCampaignUseCase, final UpdateDetailsCampaignUseCase updateDetailsCampaignUseCase) {
         this.getCampaignsUseCase = Objects.requireNonNull(getCampaignsUseCase);
         this.createCampaignUseCase = Objects.requireNonNull(createCampaignUseCase);
         this.activateCampaignUseCase = Objects.requireNonNull(activateCampaignUseCase);
@@ -38,6 +40,7 @@ public class CampaignResolver {
         this.archiveCampaignUseCase = Objects.requireNonNull(archiveCampaignUseCase);
         this.cancelCampaignUseCase = Objects.requireNonNull(cancelCampaignUseCase);
         this.pauseCampaignUseCase = Objects.requireNonNull(pauseCampaignUseCase);
+        this.updateDetailsCampaignUseCase = Objects.requireNonNull(updateDetailsCampaignUseCase);
     }
 
     @QueryMapping
@@ -91,5 +94,11 @@ public class CampaignResolver {
     public PauseCampaignUseCase.Output pauseCampaign(@Argument String id) {
         final PauseCampaignUseCase.Input input = new PauseCampaignUseCase.Input(new CampaignID(id));
         return pauseCampaignUseCase.execute(input);
+    }
+
+    @MutationMapping
+    public UpdateDetailsCampaignUseCase.Output updateDetailsCampaign(@Argument String id, @Argument UpdateDetailsCampaignDTO details) {
+        final UpdateDetailsCampaignUseCase.Input input = details.toInput(id);
+        return updateDetailsCampaignUseCase.execute(input);
     }
 }

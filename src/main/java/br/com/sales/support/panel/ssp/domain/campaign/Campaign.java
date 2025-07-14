@@ -89,10 +89,20 @@ public class Campaign {
     }
 
     public void changeName(final Name name) {
+
+        if (name == null) {
+            throw new DomainException("Campaign name cannot be null");
+        }
+
         this.name = name;
     }
 
     public void changeBudget(final Money budget) {
+
+        if (budget == null || budget.value().compareTo(BigDecimal.ZERO) < 0) {
+            throw new DomainException("Campaign budget cannot be null or negative");
+        }
+
         this.budget = budget;
     }
 
